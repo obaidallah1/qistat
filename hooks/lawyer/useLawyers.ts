@@ -11,7 +11,7 @@ export const useLawyers = () => {
     const fetchLawyers = async () => {
       setLoading(true);
       try {
-        const response = await fetch('/api/lawyer');
+        const response = await fetch('/api/lawyers');
         if (!response.ok) {
           throw new Error('Failed to fetch lawyers');
         }
