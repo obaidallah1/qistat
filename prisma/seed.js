@@ -5,16 +5,16 @@ const prisma = new PrismaClient();
 async function main() {
   const clientUser = await prisma.cUser.create({
     data: {
-      email: 'client@example.com',
+      email: 'newclient@example.com', // Changed email
       firstName: 'John',
       lastName: 'Doe',
       role: UserRole.CLIENT,
     },
   });
-
+  
   const lawyerUser = await prisma.cUser.create({
     data: {
-      email: 'lawyer@example.com',
+      email: 'newlawyer@example.com', // Changed email
       firstName: 'Jane',
       lastName: 'Smith',
       role: UserRole.LAWYER,
@@ -36,6 +36,10 @@ async function main() {
       bio: 'Experienced lawyer in criminal cases.',
       phoneNumber: '987-654-3210',
       address: '456 Lawyer Ave, City, Country',
+      experience: '10 years of experience in criminal law', // New property
+      certificate: "Juris Doctor (JD)", // New property
+      rating: 4.5, // New property
+      avatar: 'https://example.com/avatar.jpg', // Optional: Add an avatar URL
     },
   });
 
