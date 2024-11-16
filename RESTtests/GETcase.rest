@@ -1,0 +1,1 @@
+GET http://localhost:3000/api/cases/c95bd132-caa8-4e0b-a033-da464d132e12

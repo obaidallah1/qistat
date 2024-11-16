@@ -1,0 +1,293 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model CUser {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  firstName String?
+  lastName  String?
+  role      UserRole @default(CLIENT)
+
+  isActive   Boolean   @default(true)
+  dateJoined DateTime  @default(now())
+  lastLogin  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+
+  client          Client?
+  lawyer          Lawyer?
+  caseMemberships CaseMembership[]
+  notifications   Notification[]
+  messagesSent    Message[]        @relation("MessagesSent")
+  messageStatuses MessageStatus[]
+  chatRooms       ChatRoom[]
+  paymentStatuses Payment[]
+  Message         Message[]
+
+  @@index([email])
+  @@index([role])
+}
+
+// Client Model
+model Client {
+  id          String  @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid @unique  
+  phoneNumber String?
+  address     String? @db.Text
+  avatar      String?
+
+  user         CUser         @relation(fields: [userId], references: [id])
+  caseRequests CaseRequest[]
+  cases        Case[]
+  documents    Document[]
+
+  @@index([userId])
+}
+
+// Lawyer Model
+model Lawyer {
+  id             String  @id @default(uuid()) @db.Uuid
+  userId         String   @db.Uuid @unique  
+  avatar         String?
+  specialization String
+  bio            String? @db.Text
+  phoneNumber    String?
+  address        String? @db.Text
+
+  user            CUser            @relation(fields: [userId], references: [id])
+  cases           Case[]
+  caseRequests    CaseRequest[]
+  invoices        Invoice[]
+  payments        Payment[]
+  caseMemberships CaseMembership[]
+
+  @@index([userId])
+}
+
+// Invoice Model
+model Invoice {
+  id          String   @id @default(uuid()) @db.Uuid
+  lawyerId    String     @db.Uuid   
+  amount      Decimal  @db.Decimal(10, 2)
+  issueDate   DateTime @db.Date
+  dueDate     DateTime @db.Date
+  status      String
+  active      Boolean  @default(false)
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  lawyer   Lawyer    @relation(fields: [lawyerId], references: [id])
+  payments Payment[]
+
+  @@index([lawyerId])
+}
+
+// Payment Model
+model Payment {
+  id            String   @id @default(uuid()) @db.Uuid
+  invoiceId     String     @db.Uuid   
+  amount        Decimal  @db.Decimal(10, 2)
+  paymentDate   DateTime @db.Date
+  paymentMethod String
+  status        String
+
+  invoice Invoice  @relation(fields: [invoiceId], references: [id])
+  CUser   CUser[]
+  Lawyer  Lawyer[]
+
+  @@index([invoiceId])
+}
+
+// Case Model
+model Case {
+  id          String       @id @default(uuid()) @db.Uuid
+  caseName    String
+  description String?      @db.Text
+  icon        String?
+  status      CaseStatus   @default(IN_PROGRESS)
+  priority    CasePriority @default(MEDIUM)
+  privacy     CasePrivacy  @default(PRIVATE)
+  lawyerId    String?      @db.Uuid   
+  clientId    String?      @db.Uuid   
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
+
+  lawyer          Lawyer?          @relation(fields: [lawyerId], references: [id])
+  client          Client?          @relation(fields: [clientId], references: [id])
+  caseRequests    CaseRequest[]
+  documents       Document[]
+  caseMemberships CaseMembership[]
+  chatRooms       ChatRoom[]
+
+  @@index([lawyerId])
+  @@index([clientId])
+}
+
+// CaseRequest Model
+model CaseRequest {
+  id          String            @id @default(uuid()) @db.Uuid
+  clientId    String             @db.Uuid   
+  lawyerId    String              @db.Uuid   
+  requestDate DateTime          @default(now())
+  status      CaseRequestStatus @default(PENDING)
+  slot CaseRequestSlot @default(N_P)
+  pinned      Boolean           @default(false)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @default(now()) @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id])
+  lawyer Lawyer @relation(fields: [lawyerId], references: [id])
+  Case   Case[] 
+
+  @@index([clientId])
+  @@index([lawyerId])
+}
+
+// ChatRoom Model
+model ChatRoom {
+  id        String   @id @default(uuid()) @db.Uuid
+  caseId    String   @db.Uuid   
+  createdAt DateTime @default(now())
+
+  case     Case      @relation(fields: [caseId], references: [id])
+  messages Message[]
+  CUser    CUser[]
+
+  @@index([caseId])
+}
+
+// Message Model
+model Message {
+  id             String   @id @default(uuid()) @db.Uuid
+  chatRoomId     String    @db.Uuid @unique  
+  senderId       String      @db.Uuid @unique  
+  messageType    String
+  messageContent String?  @db.Text
+  attachment     String?
+  sentAt         DateTime @default(now())
+
+  chatRoom ChatRoom        @relation(fields: [chatRoomId], references: [id])
+  sender   CUser           @relation(fields: [senderId], references: [id])
+  statuses MessageStatus[]
+  CUser    CUser[]         @relation("MessagesSent")
+
+  @@index([chatRoomId])
+  @@index([senderId])
+}
+
+// MessageStatus Model
+model MessageStatus {
+  id        String    @id @default(uuid()) @db.Uuid
+  messageId String     @db.Uuid   
+  userId    String     @db.Uuid   
+  isRead    Boolean   @default(false)
+  readAt    DateTime?
+
+  message Message @relation(fields: [messageId], references: [id])
+  user    CUser   @relation(fields: [userId], references: [id])
+
+  @@index([messageId])
+  @@index([userId])
+}
+
+// Document Model
+model Document {
+  id         String   @id @default(uuid()) @db.Uuid
+  caseId     String   @db.Uuid   
+  title      String
+  file       String
+  uploadedAt DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  case   Case     @relation(fields: [caseId], references: [id])
+  Client Client[]
+
+  @@index([caseId])
+}
+
+// CaseMembership Model
+model CaseMembership {
+  id          String             @id @default(uuid()) @db.Uuid
+  userId      String             @db.Uuid   
+  caseId      String             @db.Uuid   
+  role        CaseMembershipRole @default(STAFF)
+  permissions Json               @default("{}")
+
+  user   CUser    @relation(fields: [userId], references: [id])
+  case   Case     @relation(fields: [caseId], references: [id])
+  Lawyer Lawyer[]
+
+  @@index([userId])
+  @@index([caseId])
+}
+
+// Notification Model
+model Notification {
+  id               String           @id @default(uuid()) @db.Uuid
+  userId           String           @db.Uuid   
+  message          String           @db.Text
+  createdAt        DateTime         @default(now())
+  isRead           Boolean          @default(false)
+  notificationType NotificationType @default(MESSAGE)
+  url              String?
+
+  user CUser @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([isRead])
+}
+
+enum CaseMembershipRole {
+  STAFF
+  ADMIN
+  MEMBER
+}
+
+enum CaseRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CaseStatus {
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+}
+
+enum CasePriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum CasePrivacy {
+  PRIVATE
+  PUBLIC
+  INTERNAL
+}
+
+enum NotificationType {
+  MESSAGE
+  ALERT
+  REMINDER
+}
+
+enum UserRole {
+  CLIENT
+  LAWYER
+  ADMIN
+}
+
+enum CaseRequestSlot {
+  AVAILABLE
+  UNAVAILABLE
+  N_P
+}
