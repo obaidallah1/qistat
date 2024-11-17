@@ -1,90 +1,198 @@
+import { CaseRequest, ChatRoom, MessageStatus } from "@prisma/client";
+
+export interface CUser {
+  id: string; // @id @default(uuid()) @db.Uuid
+  email: string; // @unique
+  firstName?: string;
+  lastName?: string;
+  role: UserRole; // @default(CLIENT)
+  isActive?: boolean; // @default(true)
+  dateJoined?: Date; // @default(now())
+  lastLogin?: Date;
+  createdAt?: Date; // @default(now())
+  updatedAt?: Date; // @default(now()) @updatedAt
+
+  client?: Client; // Relationship
+  lawyer?: Lawyer; // Relationship
+  caseMemberships?: CaseMembership[]; // Relationship
+  notifications?: Notification[]; // Relationship
+  messagesSent?: Message[]; // Relationship
+  messageStatuses?: MessageStatus[]; // Relationship
+  chatRooms?: ChatRoom[]; // Relationship
+  paymentStatuses?: Payment[]; // Relationship
+}
+
+export interface LawyerWithUser {
+  lawyer: Lawyer;
+  user: CUser;
+}
+
 export interface Lawyer {
-  id: string;
-  userId: string;
+  id: string; // @id @default(uuid()) @db.Uuid
+  userId: string; // @db.Uuid @unique
   avatar?: string;
   specialization: string;
-  bio?: string;
+  bio?: string; // @db.Text
   phoneNumber?: string;
-  address?: string;
+  address?: string; // @db.Text
   experience?: string; // New property
   certificate?: string; // New property
   rating?: number; // New property
+
+  user: CUser; // Relationship
+  cases?: Case[]; // Relationship
+  caseRequests?: CaseRequest[]; // Relationship
+  invoices?: Invoice[]; // Relationship
+  payments?: Payment[]; // Relationship
+  caseMemberships?: CaseMembership[]; // Relationship
 }
 
 export interface Client {
-  id: string;
-  userId: string;
+  id: string; // @id @default(uuid()) @db.Uuid
+  userId: string; // @db.Uuid @unique
   phoneNumber?: string;
-  address?: string;
+  address?: string; // @db.Text
   avatar?: string;
+
+  user: CUser; // Relationship
+  caseRequests?: CaseRequest[]; // Relationship
+  cases?: Case[]; // Relationship
+  documents?: Document[]; // Relationship
 }
 
 export interface Case {
-  id: string;
-  caseName: string;
-  description?: string;
+  id: string; // @id @default(uuid()) @db.Uuid
+  caseName: string; 
+  description?: string; // @db.Text
   icon?: string;
-  status: string; // Use enums or specific types as needed
-  priority: string;
-  privacy: string;
-  lawyerId?: string;
-  clientId?: string;
+  status: CaseStatus; // Updated to reflect schema type
+  priority: CasePriority; // Updated to reflect schema type
+  privacy: CasePrivacy; // Updated to reflect schema type
+  lawyerId?: string; // @db.Uuid
+  clientId?: string; // @db.Uuid
+  createdAt?: Date; // @default(now())
+  updatedAt?: Date; // @default(now()) @updatedAt
+
+  lawyer?: Lawyer; // Relationship
+  client?: Client; // Relationship
+  caseRequests?: CaseRequest[]; // Relationship
+  documents?: Document[]; // Relationship
+  caseMemberships?: CaseMembership[]; // Relationship
+  chatRooms?: ChatRoom[]; // Relationship
 }
 
 export interface Invoice {
-  id: string;
-  lawyerId: string;
-  amount: number; // Adjust based on your decimal requirements
-  issueDate: Date;
-  dueDate: Date;
+  id: string; // @id @default(uuid()) @db.Uuid
+  lawyerId: string; // @db.Uuid
+  amount: number; // @db.Decimal(10, 2)
+  issueDate: Date; // @db.Date
+  dueDate: Date; // @db.Date
   status: string;
-  active: boolean;
-  description?: string;
+  active: boolean; // @default(false)
+  description?: string; // @db.Text
+  createdAt?: Date; // @default(now())
+  updatedAt?: Date; // @default(now()) @updatedAt
+
+  lawyer: Lawyer; // Relationship
+  payments?: Payment[]; // Relationship
 }
 
 export interface Payment {
-  id: string;
-  invoiceId: string;
-  amount: number; // Adjust based on your decimal requirements
-  paymentDate: Date;
+  id: string; // @id @default(uuid()) @db.Uuid
+  invoiceId: string; // @db.Uuid
+  amount: number; // @db.Decimal(10, 2)
+  paymentDate: Date; // @db.Date
   paymentMethod: string;
   status: string;
+
+  invoice: Invoice; // Relationship
+  CUser?: CUser[]; // Relationship
+  Lawyer?: Lawyer[]; // Relationship
 }
 
-// Additional types based on your schema
 export interface Message {
-  id: string;
-  chatRoomId: string;
-  senderId: string;
+  id: string; // @id @default(uuid()) @db.Uuid
+  chatRoomId: string; // @db.Uuid @unique
+  senderId: string; // @db.Uuid @unique
   messageType: string;
-  messageContent?: string;
+  messageContent?: string; // @db.Text
   attachment?: string;
-  sentAt: Date;
+  sentAt: Date; // @default(now())
+
+  chatRoom: ChatRoom; // Relationship
+  sender: CUser; // Relationship
+  statuses?: MessageStatus[]; // Relationship
+  CUser?: CUser[]; // Relationship
 }
 
 export interface Document {
-  id: string;
-  caseId: string;
+  id: string; // @id @default(uuid()) @db.Uuid
+  caseId: string; // @db.Uuid
   title: string;
   file: string;
-  uploadedAt: Date;
-  updatedAt: Date;
+  uploadedAt: Date; // @default(now())
+  updatedAt: Date; // @default(now()) @updatedAt
+
+  case: Case; // Relationship
+  Client?: Client[]; // Relationship
 }
 
 export interface Notification {
-  id: string;
-  userId: string;
-  message: string;
-  createdAt: Date;
-  isRead: boolean;
-  notificationType: string; // Use enums if available
+  id: string; // @id @default(uuid()) @db.Uuid
+  userId: string; // @db.Uuid
+  message: string; // @db.Text
+  createdAt: Date; // @default(now())
+  isRead: boolean; // @default(false)
+  notificationType: NotificationType; // Updated to reflect schema type
   url?: string;
+
+  user: CUser; // Relationship
 }
 
 export interface CaseMembership {
-  id: string;
-  userId: string;
-  caseId: string;
-  role: string; // Use enums if available
-  permissions: object; // Adjust as needed
+  id: string; // @id @default(uuid()) @db.Uuid
+  userId: string; // @db.Uuid
+  caseId: string; // @db.Uuid
+  role: CaseMembershipRole; // Updated to reflect schema type
+  permissions: object; // You may want to define a specific type here
+
+  user: CUser; // Relationship
+  case: Case; // Relationship
+  Lawyer?: Lawyer[]; // Relationship
+}
+
+export enum UserRole {
+  CLIENT = "CLIENT",
+  LAWYER = "LAWYER",
+  ADMIN = "ADMIN",
+}
+
+export enum CaseMembershipRole {
+  STAFF = "STAFF",
+  ADMIN = "ADMIN",
+  MEMBER = "MEMBER",
+}
+
+export enum CaseStatus {
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+  ON_HOLD = "ON_HOLD",
+}
+
+export enum CasePriority {
+  LOW = "LOW",
+  MEDIUM = "MEDIUM",
+  HIGH = "HIGH",
+}
+
+export enum CasePrivacy {
+  PRIVATE = "PRIVATE",
+  PUBLIC = "PUBLIC",
+  INTERNAL = "INTERNAL",
+}
+
+export enum NotificationType {
+  MESSAGE = "MESSAGE",
+  ALERT = "ALERT",
+  REMINDER = "REMINDER",
 }

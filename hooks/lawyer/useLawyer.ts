@@ -1,6 +1,7 @@
 // hooks/useLawyer.ts
+
 import { useEffect, useState } from 'react';
-import { Lawyer } from '../../types'
+import { Lawyer } from '../../types'; // Adjust the import path as necessary
 
 export const useLawyer = (lawyerId: string | undefined) => {
   const [lawyer, setLawyer] = useState<Lawyer | null>(null);
@@ -13,7 +14,7 @@ export const useLawyer = (lawyerId: string | undefined) => {
 
       setLoading(true);
       try {
-        const response = await fetch(`/api/lawyer/${lawyerId}`);
+        const response = await fetch(`/api/lawyers/${lawyerId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch lawyer');
         }

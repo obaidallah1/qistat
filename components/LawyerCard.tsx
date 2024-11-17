@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter from next/navigation
 
 interface LawyerCardProps {
   lawyer: {
@@ -17,6 +18,13 @@ interface LawyerCardProps {
 }
 
 const LawyerCard: React.FC<LawyerCardProps> = ({ lawyer, onClose }) => {
+  const router = useRouter(); // Initialize the router
+
+  // Function to handle redirection to the lawyer profile
+  const handleSeeMore = () => {
+    router.push(`/lawyers/${lawyer.id}/profile`); // Redirect to the lawyer's profile page
+  };
+
   return (
     <div className="flex justify-center w-full mb-4">
       <div className="relative w-full max-w-4xl rounded-lg border p-4 shadow-lg" style={{ backgroundColor: '#D8DCDB' }}>
@@ -56,7 +64,12 @@ const LawyerCard: React.FC<LawyerCardProps> = ({ lawyer, onClose }) => {
             </div>
 
             <div className="mt-4 text-center">
-              <button className="w-full rounded-full bg-[#6F6D6C] px-4 py-1 text-white hover:bg-gray-700">See More</button>
+              <button 
+                className="w-full rounded-full bg-[#6F6D6C] px-4 py-1 text-white hover:bg-gray-700" 
+                onClick={handleSeeMore} // Attach the redirection function
+              >
+                See More
+              </button>
             </div>
           </div>
           

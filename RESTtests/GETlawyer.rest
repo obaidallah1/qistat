@@ -1,1 +1,1 @@
-GET http://localhost:3000/api/lawyers/
+GET http://localhost:3000/api/lawyers/10c614fc-0e55-43ff-a232-520431a62982
