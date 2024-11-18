@@ -1,0 +1,1 @@
+GET http://localhost:3000/api/certificates/aecc8f5a-7293-42aa-bf16-9ba0b3e54e4c
