@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import { useLawyer } from '../../../../hooks/lawyer/useLawyer';
-import Overview from '../../../../components/Overview'; // Import the Overview component
-import Cases from '../../../../components/Cases'; // Import the Cases component
-import Certificates from '../../../../components/Certificates'; // Import the Certificates component
+import Overview from '../../../../components/Overview'; 
+import Cases from '../../../../components/Cases'; 
+import Certificates from '../../../../components/Certificates'; 
 
 export default function Page({
   params,
@@ -27,16 +27,29 @@ export default function Page({
     return <div>No lawyer found.</div>;
   }
 
-  // Determine which component to render based on selectedTab
+  // Construct the lawyer object with default values
+  const lawyerProps = {
+    specialization: lawyer.specialization || 'N/A',
+    experience: lawyer.experience || 'No experience listed',
+    certificates: lawyer.certificates || [], // Default to empty array
+    bio: lawyer.bio || 'No bio available',
+    cases: lawyer.cases || [], // Default to empty array
+    avatar: lawyer.avatar || '',
+    rating: lawyer.rating || 0, // Default to 0 if undefined
+    user: {
+      username: lawyer.user?.username || 'Unknown User', // Default username
+    },
+  };
+
   const renderContent = () => {
     if (selectedTab === 'Overview') {
-      return <Overview lawyer={lawyer} />;
+      return <Overview lawyer={lawyerProps} />;
     } else if (selectedTab === 'Cases') {
-      return <Cases lawyer={lawyer} />;
+      return <Cases lawyer={lawyerProps} />; // Pass the constructed lawyerProps
     } else if (selectedTab === 'Certifications') {
-      return <Certificates lawyer={lawyer} />;
+      return <Certificates lawyer={lawyerProps} />; // Pass the constructed lawyerProps
     } else {
-      return <Overview lawyer={lawyer} />; // Default to Overview if something unexpected happens
+      return <Overview lawyer={lawyerProps} />;
     }
   };
 
@@ -46,16 +59,44 @@ export default function Page({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           <button className="mr-2 text-gray-600 hover:text-gray-800">&larr;</button>
-          <h1 className="text-2xl font-bold">
-            {lawyer.user?.username || `${lawyer.user?.firstName} ${lawyer.user?.lastName}`}
-          </h1>
+          <h1 className="text-2xl font-bold">{lawyerProps.user.username}</h1>
         </div>
         <div className="text-gray-600 hover:text-gray-800 cursor-pointer">&#8230;</div>
       </div>
 
       {/* Profile Section */}
       <div className="relative bg-gray-200 p-6 rounded-md">
-        {/* Profile details omitted for brevity */}
+        <div className="flex">
+          <div
+            className="w-48 h-48 rounded-full border-4 border-white overflow-hidden"
+            style={{
+              backgroundImage: `url(${lawyerProps.avatar})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          ></div>
+
+          <div className="ml-6 flex flex-col justify-center">
+            <div className="flex items-center mb-2">
+              {/* Star Rating Logic */}
+              {[...Array(5)].map((_, index) => {
+                const isHalfStar = lawyerProps.rating && index < Math.floor(lawyerProps.rating) && index + 0.5 === lawyerProps.rating;
+                return (
+                  <svg
+                    key={index}
+                    className={`w-5 h-5 ${index < (lawyerProps.rating || 0) ? 'text-yellow-500' : isHalfStar ? 'text-yellow-400' : 'text-gray-300'}`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M9.049 2.927a1 1 0 011.902 0l1.18 3.636a1 1 0 00.95.69h3.832a1 1 0 01.59 1.81l-3.1 2.254a1 1 0 00-.364 1.118l1.18 3.636a1 1 0 01-1.54 1.118L10 13.348l-3.1 2.254a1 1 0 01-1.54-1.118l1.18-3.636a1 1 0 00-.364-1.118L3.076 9.064a1 1 0 01.59-1.81h3.832a1 1 0 00.95-.69l1.18-3.637z" />
+                  </svg>
+                );
+              })}
+            </div>
+            <p className="text-sm text-gray-500">{lawyerProps.rating ? `${lawyerProps.rating}/5` : 'N/A'}</p>
+          </div>
+        </div>
       </div>
 
       {/* Action Buttons */}
