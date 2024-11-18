@@ -10,10 +10,11 @@ generator client {
 model CUser {
   id        String   @id @default(uuid()) @db.Uuid
   email     String   @unique
+  username  String @unique
   firstName String?
   lastName  String?
   age       Int?
-  gender    Gender
+  gender    Gender  @default(MALE)
   role      UserRole @default(CLIENT)
 
   isActive   Boolean   @default(true)
@@ -61,9 +62,9 @@ model Lawyer {
   bio            String?  @db.Text
   phoneNumber    String?
   address        String?  @db.Text
-  experience     String?  // New property for experience
- certificates    Certificate[]
-  rating         Float?   // New property for rating (e.g., 4.5)
+  experience     String?  
+  certificates    Certificate[]
+  rating         Float?   
 
   user            CUser            @relation(fields: [userId], references: [id])
   cases           Case[]

@@ -1,90 +1,94 @@
-import { PrismaClient, UserRole, CaseStatus, CasePriority, CasePrivacy, CaseRequestSlot } from '@prisma/client';
+// prisma/seed.js
+
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const clientUser = await prisma.cUser.create({
+  // Create users
+  const user1 = await prisma.cUser.create({
     data: {
-      email: 'newclient@example.com', // Changed email
+      email: 'john.doe@example.com',
+      username: 'johndoe',
       firstName: 'John',
       lastName: 'Doe',
-      role: UserRole.CLIENT,
+      age: 30,
+      gender: 'MALE',
+      role: 'CLIENT',
     },
   });
-  
-  const lawyerUser = await prisma.cUser.create({
+
+  const user2 = await prisma.cUser.create({
     data: {
-      email: 'newlawyer@example.com', // Changed email
+      email: 'jane.smith@example.com',
+      username: 'janesmith',
       firstName: 'Jane',
       lastName: 'Smith',
-      role: UserRole.LAWYER,
+      age: 28,
+      gender: 'FEMALE',
+      role: 'LAWYER',
     },
   });
 
+  // Create clients
   const client = await prisma.client.create({
     data: {
-      userId: clientUser.id,
+      userId: user1.id,
       phoneNumber: '123-456-7890',
-      address: '123 Client St, City, Country',
+      address: '123 Main St, Anytown, USA',
     },
   });
 
+  // Create lawyers
   const lawyer = await prisma.lawyer.create({
     data: {
-      userId: lawyerUser.id,
-      specialization: 'Criminal Law',
-      bio: 'Experienced lawyer in criminal cases.',
-      phoneNumber: '987-654-3210',
-      address: '456 Lawyer Ave, City, Country',
-      experience: '10 years of experience in criminal law', // New property
-      certificate: "Juris Doctor (JD)", // New property
-      rating: 4.5, // New property
-      avatar: 'https://example.com/avatar.jpg', // Optional: Add an avatar URL
+      userId: user2.id,
+      avatar: 'avatar_url.jpg',
+      specialization: 'Family Law',
+      bio: 'Experienced family lawyer specializing in custody and divorce cases.',
+      phoneNumber: '098-765-4321',
+      address: '456 Elm St, Anytown, USA',
+      experience: '5 years',
     },
   });
 
-  const caseData = await prisma.case.create({
+  // Create certificates
+  await prisma.certificate.createMany({
+    data: [
+      {
+        lawyerId: lawyer.id,
+        title: 'Certified Family Lawyer',
+        issuedBy: 'State Bar Association',
+        issuedDate: new Date('2020-01-15'),
+        expirationDate: new Date('2025-01-15'),
+        documentUrl: 'http://example.com/certificate1.pdf',
+      },
+      {
+        lawyerId: lawyer.id,
+        title: 'Advanced Legal Studies',
+        issuedBy: 'Law School',
+        issuedDate: new Date('2018-05-20'),
+      },
+    ],
+  });
+
+  // Create cases
+  const case1 = await prisma.case.create({
     data: {
-      caseName: 'Case 101',
-      description: 'This is a description of the case.',
-      status: CaseStatus.IN_PROGRESS,
-      priority: CasePriority.HIGH,
-      privacy: CasePrivacy.PRIVATE,
+      caseName: 'Custody Battle',
+      description: 'Custody battle over children.',
       lawyerId: lawyer.id,
       clientId: client.id,
+      status: 'IN_PROGRESS',
+      priority: 'HIGH',
     },
   });
 
-  await prisma.caseMembership.create({
-    data: {
-      userId: lawyerUser.id,
-      caseId: caseData.id,
-      role: 'ADMIN',
-    },
-  });
-
-  await prisma.caseRequest.create({
-    data: {
-      clientId: client.id,
-      lawyerId: lawyer.id,
-      requestDate: new Date(),
-      status: 'PENDING',
-      slot: CaseRequestSlot.AVAILABLE,
-      pinned: false,
-    },
-  });
-
-  await prisma.chatRoom.create({
-    data: {
-      caseId: caseData.id,
-    },
-  });
-
-  console.log('Seeding complete!');
+  console.log({ user1, user2, client, lawyer, case1 });
 }
 
 main()
-  .catch((e) => {
+  .catch(e => {
     console.error(e);
     process.exit(1);
   })

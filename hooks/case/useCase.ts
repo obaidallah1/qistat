@@ -9,11 +9,11 @@ export const useCase = (caseId: string | undefined) => {
 
   useEffect(() => {
     const fetchCase = async () => {
-      if (!caseId) return;
+      if (!caseId) return 'case not found';
 
       setLoading(true);
       try {
-        const response = await fetch(`/api/case/${caseId}`);
+        const response = await fetch(`/api/cases/${caseId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch case');
         }
