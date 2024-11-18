@@ -11,6 +11,7 @@ export async function GET(req: Request, { params }: { params: { lawyer_id: strin
       include: {
         user: true, 
         cases: true,
+        certificates: true,
       },
     });
 
