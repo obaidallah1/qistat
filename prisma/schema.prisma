@@ -12,6 +12,8 @@ model CUser {
   email     String   @unique
   firstName String?
   lastName  String?
+  age       Int?
+  gender    Gender
   role      UserRole @default(CLIENT)
 
   isActive   Boolean   @default(true)
@@ -60,7 +62,7 @@ model Lawyer {
   phoneNumber    String?
   address        String?  @db.Text
   experience     String?  // New property for experience
-  certificate    String?  // New property for educational qualifications
+ certificates    Certificate[]
   rating         Float?   // New property for rating (e.g., 4.5)
 
   user            CUser            @relation(fields: [userId], references: [id])
@@ -132,7 +134,19 @@ model Case {
   @@index([lawyerId])
   @@index([clientId])
 }
+model Certificate {
+  id          String   @id @default(uuid()) @db.Uuid
+  lawyerId    String   @db.Uuid
+  title       String 
+  issuedBy    String  
+  issuedDate  DateTime 
+  expirationDate DateTime?
+  documentUrl String? 
 
+  lawyer      Lawyer @relation(fields: [lawyerId], references: [id]) 
+
+  @@index([lawyerId]) 
+}
 // CaseRequest Model
 model CaseRequest {
   id          String            @id @default(uuid()) @db.Uuid
@@ -293,4 +307,8 @@ enum CaseRequestSlot {
   AVAILABLE
   UNAVAILABLE
   N_P
+}
+enum Gender{
+MALE
+FEMALE
 }
