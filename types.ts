@@ -1,10 +1,13 @@
-import { CaseRequest, ChatRoom, MessageStatus } from "@prisma/client";
+import { CaseRequest,  ChatRoom, Gender, MessageStatus } from "@prisma/client";
 
 export interface CUser {
   id: string; // @id @default(uuid()) @db.Uuid
   email: string; // @unique
   firstName?: string;
   lastName?: string;
+  username: string;
+  gender?:Gender;
+  age?:number,
   role: UserRole; // @default(CLIENT)
   isActive?: boolean; // @default(true)
   dateJoined?: Date; // @default(now())
@@ -26,6 +29,18 @@ export interface LawyerWithUser {
   lawyer: Lawyer;
   user: CUser;
 }
+export interface Certificate {
+  id: string; // UUID of the certificate
+  lawyerId: string; // UUID of the associated lawyer
+  title: string; // Title of the certificate
+  issuedBy: string; // Issuing authority
+  issuedDate: Date; // Date the certificate was issued
+  expirationDate?: Date | null; // Optional expiration date
+  documentUrl?: string | null; // Optional URL to the document
+  lawyer: Lawyer; 
+
+
+}
 
 export interface Lawyer {
   id: string; // @id @default(uuid()) @db.Uuid
@@ -36,7 +51,7 @@ export interface Lawyer {
   phoneNumber?: string;
   address?: string; // @db.Text
   experience?: string; // New property
-  certificate?: string; // New property
+  certificates?:string; // New property
   rating?: number; // New property
 
   user: CUser; // Relationship
