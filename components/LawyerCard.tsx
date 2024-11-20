@@ -80,8 +80,8 @@ const LawyerCard: React.FC<LawyerCardProps> = ({ lawyer, onClose }) => {
             </div>
 
             <div className="flex justify-end space-x-2 mt-4">
-              <button className="px-3 py-1 bg-[#6F6D6C] text-white rounded-full hover:bg-gray-700">Button 1</button>
-              <button className="px-3 py-1 bg-[#6F6D6C] text-white rounded-full hover:bg-gray-700">Button 2</button>
+              <button className="px-3 py-1 bg-[#6F6D6C] text-white rounded-full hover:bg-gray-700">connect</button>
+              <button className="px-3 py-1 bg-[#6F6D6C] text-white rounded-full hover:bg-gray-700">chat</button>
             </div>
           </div>
         </div>
