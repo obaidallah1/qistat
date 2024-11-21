@@ -6,7 +6,7 @@ interface LawyerCardProps {
   lawyer: {
     id: string;
     avatar?: string;
-    specialization: string;
+    specialization?: string; // Make this optional
     bio?: string;
     phoneNumber?: string;
     address?: string;
@@ -14,7 +14,7 @@ interface LawyerCardProps {
     certificate?: string;
     rating?: number;
   };
-  onClose: (lawyerId: string) => void; // Callback for closing the card with lawyer ID
+  onClose: (lawyerId: string) => void;
 }
 
 const LawyerCard: React.FC<LawyerCardProps> = ({ lawyer, onClose }) => {

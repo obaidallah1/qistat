@@ -51,7 +51,7 @@ export interface Lawyer {
   phoneNumber?: string;
   address?: string; // @db.Text
   experience?: string; // New property
-  certificates?:string; // New property
+  certificates?:Certificate[]; // New property
   rating?: number; // New property
 
   user: CUser; // Relationship
