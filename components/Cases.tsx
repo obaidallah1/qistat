@@ -1,43 +1,43 @@
-import React, { useState } from 'react';
-import { useCase } from '../hooks/case/useCase';
+import React from 'react';
+import { useCases } from '../hooks/case/useLawyerCases'; // Adjusted import to use the new hook
 import { Lawyer } from '@/types';
-
+import CasesSkeleton from './ui/CaseSkeleton'; // Import the skeleton component
 
 interface CasesProps {
   lawyer: Lawyer;
 }
 
 const Cases: React.FC<CasesProps> = ({ lawyer }) => {
-  const [selectedCaseId, setSelectedCaseId] = useState<string | null>(null);
-  const { caseData, loading, error } = useCase(selectedCaseId || undefined); // Use the custom hook
+  const { cases, loading, error } = useCases(lawyer.id); 
 
-  const handleCaseSelect = (id: string) => {
-    setSelectedCaseId(id);
-  };
+  // Filter cases to show only those related to the lawyer
+  const lawyerCases = cases.filter(caseItem => caseItem.lawyerId === lawyer.id);
 
   return (
     <div>
       <h2 className="text-lg font-semibold">Cases</h2>
+      {loading && <CasesSkeleton />} {/* Show skeleton while loading */}
+      {error && <p>Error: {error}</p>}
       <ul className="mt-4">
-        {lawyer.cases?.map((caseItem) => (
-          <li key={caseItem.id} className="mb-2">
-            <button
-              onClick={() => handleCaseSelect(caseItem.id)}
-              className="text-blue-600 hover:underline"
-            >
-              {caseItem.caseName} {/* Updated to use caseName */}
-            </button>
-          </li>
-        ))}
+        {lawyerCases.length > 0 ? (
+          lawyerCases.map((caseItem) => (
+            <li key={caseItem.id} className="mb-2">
+              <button
+                className="text-blue-600 hover:underline"
+              >
+                {caseItem.caseName} {/* Updated to use caseName */}
+              </button>
+            </li>
+          ))
+        ) : (
+          <p>No cases found for this lawyer.</p>
+        )}
       </ul>
 
-      {loading && <p>Loading case details...</p>}
-      {error && <p>Error: {error}</p>}
-      {caseData && (
+      {lawyerCases.length > 0 && (
         <div className="mt-6 p-4 border border-gray-300 rounded-md">
-          <h3 className="text-lg font-semibold">{caseData.caseName || 'Untitled Case'}</h3>
-          <p>Status: {caseData.status || 'Unknown Status'}</p>
-          <p>Description: {caseData.description || 'No description available.'}</p>
+          <h3 className="text-lg font-semibold">Case Details</h3>
+          {/* Display case details here if needed */}
         </div>
       )}
     </div>
