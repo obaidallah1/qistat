@@ -1,7 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import LawyerCard from "../../components/LawyerCard";
-import { useLawyers } from '../../hooks/lawyer/useLawyers'; // Adjust the import path as necessary
+import { useLawyers } from '../../hooks/lawyer/useLawyers'; 
+import { CardSkeleton } from '@/components/ui/CardSkeleton';
 import {
   Pagination,
   PaginationContent,
@@ -37,12 +38,20 @@ export default function Home() {
 
   // Handle loading state
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-8 sm:p-20">
+        <CardSkeleton /> {/* Show skeleton while loading */}
+      </div>
+    );
   }
 
   // Handle error state
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-8 sm:p-20">
+        <div>Error: {error}</div>
+      </div>
+    );
   }
 
   const totalLawyers = lawyers.length;
