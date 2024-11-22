@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import Certificates from '../../../../components/Certificates'; 
 import { Lawyer } from '@/types'; // Import the Lawyer type
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function Page({
   params,
@@ -39,14 +40,14 @@ export default function Page({
   const lawyerProps: Lawyer = {
     id: lawyer.id,
     userId: lawyer.userId,
-    avatar: lawyer.avatar || 'icons/profile.png', // Optional
+    avatar: lawyer.avatar || 'icons/profile.png', 
     specialization: lawyer.specialization || 'N/A',
-    bio: lawyer.bio || 'No bio available', // Optional
-    phoneNumber: lawyer.phoneNumber || '', // Optional
-    address: lawyer.address || '', // Optional
-    experience: lawyer.experience || 'No experience listed', // Optional
-    certificates: lawyer.certificates || [], // Optional
-    rating: lawyer.rating || 0, // Optional
+    bio: lawyer.bio || 'No bio available', 
+    phoneNumber: lawyer.phoneNumber || '', 
+    address: lawyer.address || '', 
+    experience: lawyer.experience || 'No experience listed', 
+    certificates: lawyer.certificates || [], 
+    rating: lawyer.rating || 0, 
     user: {
       id: lawyer.user?.id || 'unknown',
       email: lawyer.user?.email || 'unknown@example.com',
@@ -91,13 +92,11 @@ export default function Page({
 
       <div className="relative bg-gray-200 p-6 rounded-md">
         <div className="flex">
-          <div className="w-48 h-48 rounded-full border-4 border-white overflow-hidden">
-            <img
-              src={lawyerProps.avatar}
-              alt="Lawyer Avatar"
-              className="w-full h-full object-cover"
-            />
-          </div>
+        <Avatar className="h-40 w-40"> 
+    <AvatarImage src={lawyerProps.avatar} className="h-full w-full object-cover" />
+    <AvatarFallback>CN</AvatarFallback>
+  </Avatar>
+
           <div className="ml-6 flex flex-col justify-center">
             <div className="flex items-center mb-2">
               {/* Star Rating Logic */}
