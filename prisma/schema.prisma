@@ -64,9 +64,11 @@ model Lawyer {
   address        String?  @db.Text
   experience     String?  
   certificates    Certificate[]
-  rating         Float?   
+  rating         Float? 
+  officeId       String?  @db.Uuid  
 
   user            CUser            @relation(fields: [userId], references: [id])
+  office          Office?          @relation(fields: [officeId], references: [id])
   cases           Case[]
   caseRequests    CaseRequest[]
   invoices        Invoice[]
@@ -74,6 +76,19 @@ model Lawyer {
   caseMemberships CaseMembership[]
 
   @@index([userId])
+}
+//Office Model
+model Office {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  address     String?  @db.Text
+  phone       String?
+  avatar      String?  // URL or path to the office avatar image
+  rating      Float?   // Average rating for the office
+  numberOfRatings Int? // Total number of ratings received
+  lawyers     Lawyer[] // One office can have multiple lawyers
+
+  @@index([name])
 }
 
 // Invoice Model
