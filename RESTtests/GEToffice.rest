@@ -1,0 +1,1 @@
+GET http://localhost:3000/api/offices/42c560ae-3659-4929-93de-1fcd7e49ec1b
