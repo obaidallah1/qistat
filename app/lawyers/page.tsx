@@ -6,7 +6,6 @@ import { CardSkeleton } from '@/components/ui/CardSkeleton';
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,

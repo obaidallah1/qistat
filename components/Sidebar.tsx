@@ -113,26 +113,23 @@ export const DesktopSidebar = ({ className, ...props }: React.ComponentProps<typ
     </motion.div>
   );
 };;
-
-// Sidebar Link Component
 export const SidebarLink = ({ link }: { link: { label: string; href: string; icon: React.ReactNode } }) => {
   const { open } = useSidebar();
   return (
-    <Link href={link.href} className="flex items-center justify-start gap-2 py-2 group">
+    <Link href={link.href} className="flex items-center justify-start gap-2 py-2 group transition-colors duration-200">
       {link.icon}
       <motion.span
         animate={{
           display: open ? "inline-block" : "none",
           opacity: open ? 1 : 0,
         }}
-        className="text-neutral-700 dark:text-neutral-200 text-sm transition duration-150 whitespace-pre"
+        className="text-neutral-700 dark:text-neutral-200 text-sm transition duration-150 whitespace-pre group-hover:text-blue-600 dark:group-hover:text-blue-400" // Change color on hover
       >
         {link.label}
       </motion.span>
     </Link>
   );
 };
-
 // Mobile Sidebar
 export const MobileSidebar = ({ className, children, ...props }: React.ComponentProps<"div">) => {
   const { open, setOpen } = useSidebar();
