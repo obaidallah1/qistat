@@ -1,20 +1,9 @@
 import React from 'react';
+import { Lawyer } from '@/types';
 
-// Define a type for Certificate
-interface Certificate {
-  id: string;
-  title: string;
-  issuedBy: string;
-  issuedDate: string; // Change to string for the incoming API data
-  expirationDate?: string; // Optional, change to string
-  documentUrl?: string; // Optional
-}
 
-// Update CertificatesProps to reflect the new lawyer structure
 interface CertificatesProps {
-  lawyer: {
-    certificates?: Certificate[]; // Optional: certificates can be undefined
-  };
+  lawyer: Lawyer;
 }
 
 const Certificates: React.FC<CertificatesProps> = ({ lawyer }) => {

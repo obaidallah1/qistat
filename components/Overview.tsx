@@ -1,24 +1,9 @@
 import React from 'react';
+import { Lawyer  } from '@/types';
 
-// Define a type for the Certificate
-interface Certificate {
-  id: string;
-  title: string;
-  issuedBy: string;
-  issuedDate: string;
-}
-interface Cases{
-  id: string;
-}
 // Update the OverviewProps to use the new types
 interface OverviewProps {
-  lawyer: {
-    specialization: string;
-    experience?: string; // Optional
-    certificates?: Certificate[]; // Optional array of Certificate
-    cases?:Cases[];
-    bio: string;
-  };
+  lawyer: Lawyer; // Use the Lawyer type directly
 }
 
 const Overview: React.FC<OverviewProps> = ({ lawyer }) => {

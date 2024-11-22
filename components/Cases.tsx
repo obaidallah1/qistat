@@ -1,19 +1,10 @@
 import React, { useState } from 'react';
 import { useCase } from '../hooks/case/useCase';
+import { Lawyer } from '@/types';
 
-// Define a type for Case
-interface Case {
-  id: string;
-  caseName: string; // Updated to match your model
-  description?: string; // Optional
-  status: string; // Adjust based on your CaseStatus type
-}
 
-// Update CasesProps to reflect the new lawyer structure
 interface CasesProps {
-  lawyer: {
-    cases?: Case[]; // Optional: cases can be undefined
-  };
+  lawyer: Lawyer;
 }
 
 const Cases: React.FC<CasesProps> = ({ lawyer }) => {

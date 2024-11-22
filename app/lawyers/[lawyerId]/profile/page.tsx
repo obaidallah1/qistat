@@ -1,10 +1,11 @@
-'use client'
+'use client';
 
 import React, { useState } from 'react';
 import { useLawyer } from '../../../../hooks/lawyer/useLawyer';
 import Overview from '../../../../components/Overview'; 
 import Cases from '../../../../components/Cases'; 
 import Certificates from '../../../../components/Certificates'; 
+import { Lawyer, CUser } from '@/types'; // Import the Lawyer and CUser types
 
 export default function Page({
   params,
@@ -28,26 +29,37 @@ export default function Page({
   }
 
   // Construct the lawyer object with default values
-  const lawyerProps = {
+  const lawyerProps: Lawyer = {
+    id: lawyer.id,
+    userId: lawyer.userId,
+    avatar: lawyer.avatar || 'icons/profile.png', // Optional
     specialization: lawyer.specialization || 'N/A',
-    experience: lawyer.experience || 'No experience listed',
-    certificates: lawyer.certificates || [], // Default to empty array
-    bio: lawyer.bio || 'No bio available',
-    cases: lawyer.cases || [], // Default to empty array
-    avatar: lawyer.avatar || '',
-    rating: lawyer.rating || 0, // Default to 0 if undefined
+    bio: lawyer.bio || 'No bio available', // Optional
+    phoneNumber: lawyer.phoneNumber || '', // Optional
+    address: lawyer.address || '', // Optional
+    experience: lawyer.experience || 'No experience listed', // Optional
+    certificates: lawyer.certificates || [], // Optional
+    rating: lawyer.rating || 0, // Optional
     user: {
-      username: lawyer.user?.username || 'Unknown User', // Default username
+      id: lawyer.user?.id || 'unknown', // Ensure this matches CUser structure
+      email: lawyer.user?.email || 'unknown@example.com', // Ensure this matches CUser structure
+      role: lawyer.user?.role || 'unknown', // Ensure this matches CUser structure
+      username: lawyer.user?.username || 'Unknown User', // Include username as well
     },
+    cases: lawyer.cases || [], // Optional
+    caseRequests: lawyer.caseRequests || [], // Optional
+    invoices: lawyer.invoices || [], // Optional
+    payments: lawyer.payments || [], // Optional
+    caseMemberships: lawyer.caseMemberships || [], // Optional
   };
 
   const renderContent = () => {
     if (selectedTab === 'Overview') {
       return <Overview lawyer={lawyerProps} />;
     } else if (selectedTab === 'Cases') {
-      return <Cases lawyer={lawyerProps} />; // Pass the constructed lawyerProps
+      return <Cases lawyer={lawyerProps} />;
     } else if (selectedTab === 'Certifications') {
-      return <Certificates lawyer={lawyerProps} />; // Pass the constructed lawyerProps
+      return <Certificates lawyer={lawyerProps} />;
     } else {
       return <Overview lawyer={lawyerProps} />;
     }
@@ -67,14 +79,13 @@ export default function Page({
       {/* Profile Section */}
       <div className="relative bg-gray-200 p-6 rounded-md">
         <div className="flex">
-          <div
-            className="w-48 h-48 rounded-full border-4 border-white overflow-hidden"
-            style={{
-              backgroundImage: `url(${lawyerProps.avatar})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          ></div>
+        <div className="w-48 h-48 rounded-full border-4 border-white overflow-hidden">
+  <img
+    src={lawyerProps.avatar}
+    alt="Lawyer Avatar"
+    className="w-full h-full object-cover"
+  />
+</div>
 
           <div className="ml-6 flex flex-col justify-center">
             <div className="flex items-center mb-2">
@@ -84,7 +95,13 @@ export default function Page({
                 return (
                   <svg
                     key={index}
-                    className={`w-5 h-5 ${index < (lawyerProps.rating || 0) ? 'text-yellow-500' : isHalfStar ? 'text-yellow-400' : 'text-gray-300'}`}
+                    className={`w-5 h-5 ${
+                      index < (lawyerProps.rating || 0)
+                        ? 'text-yellow-500'
+                        : isHalfStar
+                        ? 'text-yellow-400'
+                        : 'text-gray-300'
+                    }`}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"

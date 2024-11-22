@@ -38,7 +38,7 @@ export const useSidebar = () => {
   return context;
 };
 
- const SidebarProvider = ({ children, open: openProp, setOpen: setOpenProp, animate = true }: {
+export const SidebarProvider = ({ children, open: openProp, setOpen: setOpenProp, animate = true }: {
   children: React.ReactNode;
   open?: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -54,8 +54,16 @@ export const useSidebar = () => {
     </SidebarContext.Provider>
   );
 };
-
- const Sidebar = ({ children, open, setOpen, animate }: {
+export const SidebarBody = () => {
+  return (
+    <>
+      <DesktopSidebar />
+      <MobileSidebar />
+    </>
+  );
+};
+// Sidebar Component
+export const Sidebar = ({ children, open, setOpen, animate }: {
   children: React.ReactNode;
   open?: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -67,10 +75,10 @@ export const useSidebar = () => {
     </SidebarProvider>
   );
 };
-
 // Desktop Sidebar
-const DesktopSidebar = ({ className, ...props }: React.ComponentProps<typeof motion.div>) => {
+export const DesktopSidebar = ({ className, ...props }: React.ComponentProps<typeof motion.div>) => {
   const { open, setOpen, animate } = useSidebar();
+  
   return (
     <motion.div
       className={cn("h-full px-4 py-4 hidden md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-[300px] flex-shrink-0", className)}
@@ -82,10 +90,14 @@ const DesktopSidebar = ({ className, ...props }: React.ComponentProps<typeof mot
       {/* User Profile */}
       <div className="flex items-center mb-6">
         <div className="relative mr-4">
-          <img src="/icons/profile.png" alt="User Profile" className="w-12 h-12 rounded-full" />
+          <img 
+            src="/icons/profile.png" 
+            alt="User Profile" 
+            className={cn("rounded-full transition-all duration-300", open ? "w-12 h-12" : "w-10 h-10")} // Adjust size
+          />
           <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border border-neutral-100 rounded-full"></span>
         </div>
-        {open && ( // Conditionally render name and username only when sidebar is open
+        {open && ( // Show details only when the sidebar is open
           <div>
             <p className="font-bold text-lg">Full User Name</p>
             <p className="text-gray-600 text-sm">@username</p>
@@ -102,9 +114,10 @@ const DesktopSidebar = ({ className, ...props }: React.ComponentProps<typeof mot
       </div>
     </motion.div>
   );
-};
+};;
 
- const SidebarLink = ({ link }: { link: { label: string; href: string; icon: React.ReactNode } }) => {
+// Sidebar Link Component
+export const SidebarLink = ({ link }: { link: { label: string; href: string; icon: React.ReactNode } }) => {
   const { open } = useSidebar();
   return (
     <Link href={link.href} className="flex items-center justify-start gap-2 py-2 group">
@@ -123,7 +136,7 @@ const DesktopSidebar = ({ className, ...props }: React.ComponentProps<typeof mot
 };
 
 // Mobile Sidebar
- const MobileSidebar = ({ className, children, ...props }: React.ComponentProps<"div">) => {
+export const MobileSidebar = ({ className, children, ...props }: React.ComponentProps<"div">) => {
   const { open, setOpen } = useSidebar();
   return (
     <div className={cn("h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full", className)} {...props}>
@@ -149,6 +162,3 @@ const DesktopSidebar = ({ className, ...props }: React.ComponentProps<typeof mot
     </div>
   );
 };
-
-// Export all components
-export { Sidebar, SidebarProvider, DesktopSidebar, MobileSidebar, SidebarLink };
