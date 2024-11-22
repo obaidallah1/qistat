@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconMenu2, IconX } from "@tabler/icons-react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 // Define the links structure
 const links = [
@@ -88,15 +89,12 @@ export const DesktopSidebar = ({ className, ...props }: React.ComponentProps<typ
       {...props}
     >
       {/* User Profile */}
-      <div className="flex items-center mb-6">
-        <div className="relative mr-4">
-          <img 
-            src="/icons/profile.png" 
-            alt="User Profile" 
-            className={cn("rounded-full transition-all duration-300", open ? "w-12 h-12" : "w-10 h-10")} // Adjust size
-          />
-          <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border border-neutral-100 rounded-full"></span>
-        </div>
+      <div className="flex items-center mb-6 justify-center md:justify-start ">
+      <Avatar>
+  <AvatarImage src="/icons/profile.png" />
+  <AvatarFallback>CN</AvatarFallback>
+</Avatar>
+
         {open && ( // Show details only when the sidebar is open
           <div>
             <p className="font-bold text-lg">Full User Name</p>
