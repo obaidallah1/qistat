@@ -5,6 +5,7 @@ import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { usePathname } from 'next/navigation';
 
 // Define the links structure
 const links = [
@@ -115,6 +116,9 @@ export const DesktopSidebar = ({ className, ...props }: React.ComponentProps<typ
 };;
 export const SidebarLink = ({ link }: { link: { label: string; href: string; icon: React.ReactNode } }) => {
   const { open } = useSidebar();
+  const pathname = usePathname(); // Get the current pathname
+  const isActive = pathname === link.href; // Check if the link is active
+
   return (
     <Link href={link.href} className="flex items-center justify-start gap-2 py-2 group transition-colors duration-200">
       {link.icon}
@@ -123,7 +127,12 @@ export const SidebarLink = ({ link }: { link: { label: string; href: string; ico
           display: open ? "inline-block" : "none",
           opacity: open ? 1 : 0,
         }}
-        className="text-neutral-700 dark:text-neutral-200 text-sm transition duration-150 whitespace-pre group-hover:text-blue-600 dark:group-hover:text-blue-400" // Change color on hover
+        className={cn(
+          "text-neutral-700 dark:text-neutral-200 text-sm transition duration-150 whitespace-pre group-hover:text-blue-600 dark:group-hover:text-blue-400", // Default styles
+          {
+            'text-orange underline': isActive, // Active styles
+          }
+        )}
       >
         {link.label}
       </motion.span>
