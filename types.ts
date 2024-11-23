@@ -42,17 +42,6 @@ export interface Certificate {
 
 }
 
-export interface Office {
-  id: string; // @id @default(uuid()) @db.Uuid
-  name: string; // Name of the office
-  address?: string; // @db.Text
-  phone?: string;
-  avatar?: string; // URL or path to the office avatar
-  rating?: number; // Average rating
-  numberOfRatings?: number; // Total number of ratings
-
-  lawyers?: Lawyer[]; // Relationship
-}
 
 export interface Lawyer {
   id: string; // @id @default(uuid()) @db.Uuid
@@ -65,10 +54,8 @@ export interface Lawyer {
   experience?: string; // New property
   certificates?: Certificate[]; // New property
   rating?: number; // Average rating for the lawyer
-  officeId?: string; // Foreign key to Office
 
   user: CUser; // Relationship
-  office?: Office; // Relationship to Office
   cases?: Case[]; // Relationship
   caseRequests?: CaseRequest[]; // Relationship
   invoices?: Invoice[]; // Relationship
