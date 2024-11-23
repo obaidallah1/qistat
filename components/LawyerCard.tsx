@@ -1,19 +1,10 @@
 'use client';
 import React from 'react';
 import { useRouter } from 'next/navigation'; // Import useRouter from next/navigation
+import { Lawyer } from '@/types';
 
 interface LawyerCardProps {
-  lawyer: {
-    id: string;
-    avatar?: string;
-    specialization?: string; // Make this optional
-    bio?: string;
-    phoneNumber?: string;
-    address?: string;
-    experience?: string;
-    certificate?: string;
-    rating?: number;
-  };
+  lawyer: Lawyer; // Directly use the Lawyer type
   onClose: (lawyerId: string) => void;
 }
 
@@ -25,9 +16,13 @@ const LawyerCard: React.FC<LawyerCardProps> = ({ lawyer, onClose }) => {
     router.push(`/lawyers/${lawyer.id}/profile`); // Redirect to the lawyer's profile page
   };
 
+  // Extracting full name from the user relationship
+  const { firstName, middleName, lastName } = lawyer.user;
+  const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ') || "Name not available";
+
   return (
     <div className="flex justify-center w-full mb-4">
-      <div className="relative w-full max-w-4xl rounded-lg border p-4 shadow-lg" style={{ backgroundColor: '#D8DCDB' }}>
+      <div className="relative w-full max-w-4xl rounded-lg border p-4 shadow-lg bg-CG">
         {/* Close Button */}
         <div className="absolute left-2 top-2">
           <button
@@ -58,9 +53,10 @@ const LawyerCard: React.FC<LawyerCardProps> = ({ lawyer, onClose }) => {
               <span className="text-sm text-[#3E3636]">{lawyer.rating || 0}/5</span>
             </div>
             <div className="mt-2 text-center">
+              <p className="text-lg font-semibold text-[#3E3636]">{fullName}</p> {/* Full name displayed */}
               <p className="text-lg font-semibold text-[#3E3636]">{lawyer.specialization}</p>
               <p className="text-sm text-[#3E3636]">{lawyer.experience || "N/A"}</p>
-              <p className="text-sm text-[#3E3636]">{lawyer.certificate || "N/A"}</p>
+              <p className="text-sm text-[#3E3636]">{lawyer.certificates?.join(', ') || "N/A"}</p> {/* Display certificates if available */}
             </div>
 
             <div className="mt-4 text-center">
@@ -80,8 +76,8 @@ const LawyerCard: React.FC<LawyerCardProps> = ({ lawyer, onClose }) => {
             </div>
 
             <div className="flex justify-end space-x-2 mt-4">
-              <button className="px-3 py-1 bg-[#6F6D6C] text-white rounded-full hover:bg-gray-700">connect</button>
-              <button className="px-3 py-1 bg-[#6F6D6C] text-white rounded-full hover:bg-gray-700">chat</button>
+              <button className="px-3 py-1 bg-[#6F6D6C] text-white rounded-full hover:bg-gray-700">Connect</button>
+              <button className="px-3 py-1 bg-[#6F6D6C] text-white rounded-full hover:bg-gray-700">Chat</button>
             </div>
           </div>
         </div>

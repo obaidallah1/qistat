@@ -11,8 +11,9 @@ model CUser {
   id        String   @id @default(uuid()) @db.Uuid
   email     String   @unique
   username  String @unique
-  firstName String?
-  lastName  String?
+  firstName String
+  middleName String?
+  lastName  String
   age       Int?
   gender    Gender  @default(MALE)
   role      UserRole @default(CLIENT)
