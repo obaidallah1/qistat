@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import LawyerCard from "../../components/LawyerCard";
-import { useLawyers } from '../../hooks/lawyer/useLawyers'; 
+import LawyerCard from "../../../components/LawyerCard";
+import { useLawyers } from '../../../hooks/lawyer/useLawyers'; 
 import { CardSkeleton } from '@/components/ui/CardSkeleton';
 import {
   Pagination,

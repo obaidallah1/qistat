@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useLawyer } from '../../../../hooks/lawyer/useLawyer';
-import Overview from '../../../../components/Overview'; 
-import Cases from '../../../../components/Cases'; 
+import { useLawyer } from '../../../../../hooks/lawyer/useLawyer';
+import Overview from '../../../../../components/Overview'; 
+import Cases from '../../../../../components/Cases'; 
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
-import Certificates from '../../../../components/Certificates'; 
+import Certificates from '../../../../../components/Certificates'; 
 import { Lawyer } from '@/types'; // Import the Lawyer type
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
