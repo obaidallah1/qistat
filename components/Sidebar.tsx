@@ -9,16 +9,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 // Define the links structure
 const links = [
   { label: "Lawyers", href: "/lawyers", icon: <img src="/icons/lawyericon.png" alt="Lawyers" className="w-5 h-5" /> },
-  { label: "Offices", href: "/offices", icon: <img src="/icons/office.png" alt="Offices" className="w-5 h-5" /> },
+  // { label: "Offices", href: "/offices", icon: <img src="/icons/office.png" alt="Offices" className="w-5 h-5" /> },
   { label: "My Notifications", href: "/notifications", icon: <img src="/icons/notifications.png" alt="Notifications" className="w-5 h-5" /> },
   { label: "My Bookings", href: "/bookings", icon: <img src="/icons/booking.png" alt="Bookings" className="w-5 h-5" /> },
   { label: "My Cases", href: "/cases", icon: <img src="/icons/case.png" alt="Cases" className="w-5 h-5" /> },
   { label: "My Chat", href: "/chat", icon: <img src="/icons/chat.png" alt="Chat" className="w-5 h-5" /> },
+  { label: "Bookmarks", href: "/bookmarks", icon: <img src="/icons/bookmark.png" alt="Bookmarks" className="w-5 h-5" /> },
   { label: "Dashboard", href: "/dashboard", icon: <img src="/icons/dashboard.png" alt="Dashboard" className="w-5 h-5" /> },
   { label: "Settings", href: "/settings", icon: <img src="/icons/settings.png" alt="Settings" className="w-5 h-5" /> },
   { label: "Docs", href: "/docs", icon: <img src="/icons/docs.png" alt="Docs" className="w-5 h-5" /> },
   { label: "FAQ", href: "/faq", icon: <img src="/icons/FAQ.png" alt="FAQ" className="w-5 h-5" /> },
-  { label: "Bookmarks", href: "/bookmarks", icon: <img src="/icons/bookmark.png" alt="Bookmarks" className="w-5 h-5" /> },
   { label: "Sign Out", href: "/signout", icon: <img src="/icons/signout.png" alt="Sign Out" className="w-5 h-5" /> },
 ];
 
