@@ -53,6 +53,9 @@ export default function Page({
       email: lawyer.user?.email || 'unknown@example.com',
       role: lawyer.user?.role || 'unknown',
       username: lawyer.user?.username || 'Unknown User',
+      firstName:  lawyer.user?.firstName||'',
+      middleName:  lawyer.user?.middleName ||'',
+      lastName: lawyer.user?.lastName || ''
     },
     cases: lawyer.cases || [],
     caseRequests: lawyer.caseRequests || [],
@@ -131,7 +134,7 @@ export default function Page({
             <button
               key={tab}
               className={`text-gray-600 pb-1 font-semibold ${
-                selectedTab === tab ? 'border-b-2 border-orange-500 text-orange-500' : 'hover:text-blue-600'
+                selectedTab === tab ? 'border-b-2 border-orange text-orange-500' : 'hover:text-blue-600'
               }`}
               onClick={() => setSelectedTab(tab)}
             >

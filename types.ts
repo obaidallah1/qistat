@@ -2,6 +2,7 @@ import { CaseRequest,  ChatRoom, Gender, MessageStatus } from "@prisma/client";
 
 export interface CUser {
   id: string; // @id @default(uuid()) @db.Uuid
+  clerkId: string;
   email: string; // @unique
   firstName: string;
   middleName:string;
