@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useModal } from "@/hooks/use-modal-store";
 import { toast } from "sonner";
-import { CUserBase } from "@/schema";
+import { CUserBase } from "@/schemas";
 
 export const CompleteSingupModal = () => {
   const { isOpen, onClose, type } = useModal();
